@@ -1,8 +1,8 @@
-import streamlit as st
-import google.generativeai as genai
+import os
 import pandas as pd
 from datetime import date
-import os
+import streamlit as st
+import google.generativeai as genai
 
 # ページ基本設定
 st.set_page_config(page_title="LeanBulk AI Pro", page_icon="💪", layout="centered")
@@ -92,7 +92,7 @@ with tab2:
 
     # --- 前回記録の自動参照機能 ---
     if exercise_name and not df_logs.empty:
-        prev_logs = df_logs[df_logs["種目名"].str.strip().str.lower() == exercise_name.strip().lower()]
+        prev_logs = df_logs[df_logs["種目名"].astype(str).str.strip().str.lower() == exercise_name.strip().lower()]
         if not prev_logs.empty:
             last_record = prev_logs.iloc[-1]
             st.success(f"💡 **前回の記録 ({last_record['日付']})**: {last_record['重量(kg)']}kg × {last_record['レップ数']}Reps ({last_record['セット数']}セット)")
@@ -170,4 +170,3 @@ with tab3:
                 """
                 response = model.generate_content([prompt, image_parts[0]])
                 st.markdown(response.text)
-
